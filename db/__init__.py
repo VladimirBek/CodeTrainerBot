@@ -1,1 +1,1 @@
-from .session import SessionLocal, get_unique_session
+from .session import LocalSession

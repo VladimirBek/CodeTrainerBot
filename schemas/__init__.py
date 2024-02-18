@@ -1,0 +1,1 @@
+from .exercise_schema import ExerciseSchemaCreate, ExerciseSchemaUpdate

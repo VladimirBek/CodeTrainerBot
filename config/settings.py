@@ -33,7 +33,7 @@ class Settings(BaseSettings):
             return 'rq_redis'
 
     PROJECT_NAME: str
-
+    CODEFORCE_API_URL: str = 'https://codeforces.com/'
     BOT_TOKEN: str
 
     """DATABASE CONFIG"""
@@ -62,7 +62,6 @@ class Settings(BaseSettings):
 
     class Config:
         case_sensitive = True
-        validate_default = True
 
 
 try:
