@@ -8,8 +8,8 @@ from sqlalchemy import select, AsyncSession
 
 class CRUDExercise(CRUDBase[Exercise, ExerciseSchemaCreate, ExerciseSchemaUpdate]):
 
-    async def get_by_id(self, db: AsyncSession, *, id: int) -> Optional[Exercise]:
-        q = select(Exercise).filter(Exercise.id == id)
+    async def get_by_cf_id(self, db: AsyncSession, *, cf_id: str) -> Optional[Exercise]:
+        q = select(Exercise).filter(Exercise.cf_id == cf_id)
         res = await db.execute(q)
         return res.scalar()
 
