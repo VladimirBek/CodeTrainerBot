@@ -1,9 +1,11 @@
 from typing import Optional
 
-from cruds.base import CRUDBase
-from models.excercise import Exercise
-from schemas import ExerciseSchemaUpdate, ExerciseSchemaCreate
-from sqlalchemy import select, AsyncSession
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.cruds.base import CRUDBase
+from app.models.excercise import Exercise
+from app.schemas import ExerciseSchemaUpdate, ExerciseSchemaCreate
 
 
 class CRUDExercise(CRUDBase[Exercise, ExerciseSchemaCreate, ExerciseSchemaUpdate]):

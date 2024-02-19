@@ -1,9 +1,11 @@
 from typing import Optional
 
-from cruds.base import CRUDBase
-from models.category import Category
-from schemas.category_schema import CategorySchemaCreate, CategorySchemaUpdate
-from sqlalchemy import select, AsyncSession
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.cruds.base import CRUDBase
+from app.models.category import Category
+from app.schemas.category_schema import CategorySchemaCreate, CategorySchemaUpdate
 
 
 class CRUDCategory(CRUDBase[Category, CategorySchemaCreate, CategorySchemaUpdate]):

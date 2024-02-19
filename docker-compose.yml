@@ -23,6 +23,7 @@ services:
     depends_on:
       - redis
       - app
+      - db
     command: python3.11 app/run_workers.py
     networks:
       - default
@@ -45,11 +46,11 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data/pgdata
+      - postgres_data_code_trainer:/var/lib/postgresql/data/pgdata_code_trainer
     env_file:
       - .env
     networks:
       - default
 
 volumes:
-  postgres_data:
+  postgres_data_code_trainer:

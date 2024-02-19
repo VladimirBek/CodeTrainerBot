@@ -8,13 +8,13 @@ from pydantic_settings import BaseSettings
 
 from app.logs import logger
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 load_dotenv(BASE_DIR / '.env')
 
 
 class Settings(BaseSettings):
-    REDIS_PORT: int = 6379
-    REDIS_HOST: str = None
+    REDIS_PORT: int
+    REDIS_HOST: str
 
     @field_validator("REDIS_PORT")
     def assemble_redis_port(cls, v: Union[str, List[str]], info: FieldValidationInfo) -> Any:

@@ -2,12 +2,12 @@ import asyncio
 import random
 
 from fake_useragent import UserAgent
-from requests_html import AsyncHTMLSession, HTMLResponse
-from sqlalchemy import AsyncSession
+from requests_html import AsyncHTMLSession, HTMLResponse, HTMLSession
 
 from app.config import settings
 from app.cruds.crud_category import crud_category
 from app.cruds.crud_excercise import crud_exercise
+from app.db import LocalSession
 from app.logs import logger
 from app.schemas import ExerciseSchemaCreate
 from app.schemas.category_schema import CategorySchemaCreate
@@ -19,11 +19,11 @@ class ExerciseParser:
     def __init__(self):
         self.base_url = settings.CODEFORCE_API_URL
         self.user_agent = UserAgent().random
-        self.session = AsyncHTMLSession()
+        self.session = HTMLSession()
 
     async def get_urls(self):
-        resp = await self.session.get(self.base_url + 'problemset', params={'order': "BY_SOLVED_DESC", "locale": "ru"},
-                                      headers={'User-Agent': self.user_agent})
+        resp = self.session.get(self.base_url + 'problemset', params={'order': "BY_SOLVED_DESC", "locale": "ru"},
+                                headers={'User-Agent': self.user_agent})
         if resp.status_code != 200:
             logger.error(f'Problem with getting urls of pages: status code {resp.status_code}')
             return []
@@ -33,14 +33,14 @@ class ExerciseParser:
 
     async def parse_pages(self, db, urls):
         for url in urls:
-            resp = await self.session.get(url, headers={'User-Agent': self.user_agent},
-                                          params={'order': "BY_SOLVED_DESC", "locale": "ru"})
+            resp = self.session.get(url, headers={'User-Agent': self.user_agent},
+                                    params={'order': "BY_SOLVED_DESC", "locale": "ru"})
             if resp.status_code != 200:
                 logger.error(f'Problem with getting urls of page: {url}, status code: {resp.status_code}')
                 continue
             await self.get_rows(resp, db)
 
-    async def get_rows(self, response: HTMLResponse, db: AsyncSession):
+    async def get_rows(self, response, db):
         table_with_problems = response.html.find("table.problems")
         rows = table_with_problems[0].find('tr')
         for row in rows:
@@ -54,12 +54,12 @@ class ExerciseParser:
                 if excercise_indb:
                     continue
                 name, *topic = td[1].text.split("\n")
-                topic = random.choice(topic)
-                topic_in_db = await crud_category.get_by_name(db, name=topic)
+                topic_name = random.choice(topic)
+                topic_in_db = await crud_category.get_by_name(db, name=topic_name)
                 if topic_in_db:
                     topic_id = topic_in_db.id
                 else:
-                    new_topic = await crud_category.create(db, obj_in=CategorySchemaCreate(name=topic))
+                    new_topic = await crud_category.create(db, obj_in=CategorySchemaCreate(name=topic_name))
                     topic_id = new_topic.id
                 name = td[0].find('a', first=True).text
                 task_text = await self.get_task(url)
@@ -80,7 +80,7 @@ class ExerciseParser:
             await asyncio.sleep(0.5)
 
     async def get_task(self, url):
-        task = await self.session.get(url, headers={'User-Agent': self.user_agent})
+        task = self.session.get(url, headers={'User-Agent': self.user_agent})
         task_statement = task.html.find("div.problem-statement")
         text = task_statement[0].find('p')
         text = [p.text for p in text]

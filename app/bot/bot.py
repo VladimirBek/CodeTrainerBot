@@ -22,6 +22,6 @@ class BotServiceHandlers:
 
         bot_name = await self.bot.me()
         logger.info(f"Запуск бот сервиса id: {self.bot.id} - {bot_name.full_name} ")
-        await self.dp.start_polling()
+        await self.dp.start_polling(self.bot)
 
 
