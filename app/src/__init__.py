@@ -1,1 +1,1 @@
-from .exercise_parser import ExerciseParser
+from .exercise_parser import exercise_parser

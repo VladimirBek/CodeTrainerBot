@@ -5,12 +5,12 @@ from fake_useragent import UserAgent
 from requests_html import AsyncHTMLSession, HTMLResponse
 from sqlalchemy import AsyncSession
 
-from config import settings
-from cruds.crud_category import crud_category
-from cruds.crud_excercise import crud_exercise
-from logs import logger
-from schemas import ExerciseSchemaCreate
-from schemas.category_schema import CategorySchemaCreate
+from app.config import settings
+from app.cruds.crud_category import crud_category
+from app.cruds.crud_excercise import crud_exercise
+from app.logs import logger
+from app.schemas import ExerciseSchemaCreate
+from app.schemas.category_schema import CategorySchemaCreate
 
 
 class ExerciseParser:
@@ -87,11 +87,4 @@ class ExerciseParser:
         return '\n'.join(text)
 
 
-async def main():
-    ex_parser = ExerciseParser()
-    urls = await ex_parser.get_urls()
-    await ex_parser.parse_pages(urls)
-
-
-if __name__ == '__main__':
-    asyncio.run(main())
+exercise_parser = ExerciseParser()

@@ -6,7 +6,7 @@ from pydantic import PostgresDsn, field_validator, ValidationError
 from pydantic_core.core_schema import FieldValidationInfo
 from pydantic_settings import BaseSettings
 
-from logs import logger
+from app.logs import logger
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / '.env')
