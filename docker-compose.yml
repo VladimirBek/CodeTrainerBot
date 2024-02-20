@@ -1,0 +1,58 @@
+version: '3.5'
+
+
+services:
+  app:
+    build: .
+    image: code_trainer_app
+    volumes:
+      - .:/app
+    networks:
+      - default
+    depends_on:
+      - db
+    command: /bin/bash -c "/app/pre-start.sh && python3.11 -u app/main.py"
+    env_file:
+      - .env
+    tty: true
+    stdin_open: true
+
+  worker:
+    container_name: worker_code_trainer
+    build: .
+    depends_on:
+      - redis
+      - app
+      - db
+    command: python3.11 -u app/run_workers.py
+    networks:
+      - default
+    env_file:
+      - .env
+    tty: true
+    stdin_open: true
+
+  redis:
+    container_name: rq_redis_code_trainer
+    image: bitnami/redis:6.2.1
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - "6378:6378"
+    networks:
+      - default
+
+  db:
+    container_name: postgresql_db_code_trainer
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_code_trainer:/var/lib/postgresql/data/pgdata_code_trainer
+    env_file:
+      - .env
+    networks:
+      - default
+
+volumes:
+  postgres_data_code_trainer:
