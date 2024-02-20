@@ -71,17 +71,18 @@ class UserHandler:
         async with LocalSession() as db:
             topic_info = await crud_category.get_by_name(db, name=topic)
             if not topic_info:
-                await message.message.reply_text('Тема не найдена')
+                await message.answer('Тема не найдена')
                 return
             topic_id = topic_info.id
             level_info = await crud_level.get_by_level(db, difficult=int(difficulty.strip()))
             if not level_info:
-                await message.message.reply_text('Уровень сложности не найден')
+                await message.answer('Уровень сложности не найден')
                 return
             level_id = level_info.id
             tasks = await crud_exercise.get_by_difficulty_and_topic(db, difficulty=level_id, topic_id=topic_id)
             if not tasks:
-                await message.message.reply_text('Задания на данную темы с выбранным уровнем сложности не найдены')
+                await message.answer('Задания на данную темы с выбранным уровнем сложности не найдены')
+                await message.answer('Использование: /get_task <сложность> <тема>')
                 return
             try:
                 for task in tasks[:11]:
