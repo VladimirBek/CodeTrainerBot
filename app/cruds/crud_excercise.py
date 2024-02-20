@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Sequence
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -15,5 +15,18 @@ class CRUDExercise(CRUDBase[Exercise, ExerciseSchemaCreate, ExerciseSchemaUpdate
         res = await db.execute(q)
         return res.scalar()
 
+    async def get_by_category_id(self, db: AsyncSession, *, topic_id: int) -> Optional[Sequence[Exercise]]:
+        q = select(Exercise).filter(Exercise.topic_id == topic_id)
+        res = await db.execute(q)
+        return res.scalars().all()
+    async def get_by_difficulty(self, db: AsyncSession, *, difficult: int) -> Optional[Sequence[Exercise]]:
+        q = select(Exercise).filter(Exercise.difficult == difficult)
+        res = await db.execute(q)
+        return res.scalars().all()
+
+    async def get_by_difficulty_and_topic(self, db: AsyncSession, *, difficulty: int, topic_id: int) -> Optional[Sequence[Exercise]]:
+        q = select(Exercise).filter(Exercise.difficult == difficulty, Exercise.topic_id == topic_id)
+        res = await db.execute(q)
+        return res.scalars().all()
 
 crud_exercise = CRUDExercise(Exercise)

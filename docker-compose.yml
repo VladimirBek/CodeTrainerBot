@@ -11,7 +11,7 @@ services:
       - default
     depends_on:
       - db
-    command: /bin/bash -c "/app/pre-start.sh && python3.11 app/main.py"
+    command: /bin/bash -c "/app/pre-start.sh && python3.11 -u app/main.py"
     env_file:
       - .env
     tty: true
@@ -24,11 +24,13 @@ services:
       - redis
       - app
       - db
-    command: python3.11 app/run_workers.py
+    command: python3.11 -u app/run_workers.py
     networks:
       - default
     env_file:
       - .env
+    tty: true
+    stdin_open: true
 
   redis:
     container_name: rq_redis_code_trainer

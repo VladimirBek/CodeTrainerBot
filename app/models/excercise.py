@@ -11,7 +11,7 @@ class Exercise(Base, ModelBase):
     name = Column(Text, nullable=False)
     topic_id = Column(Integer, ForeignKey("category.id"), nullable=False, index=True)
     count_solved = Column(Integer, server_default="0", nullable=False)
-    difficult = Column(Integer, server_default="0", nullable=False)
+    difficult = Column(Integer, ForeignKey("level.id"), server_default="0", nullable=False)
     task = Column(Text)
 
 

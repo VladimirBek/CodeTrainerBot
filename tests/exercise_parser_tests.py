@@ -1,6 +1,6 @@
 import unittest
 
-from src import ExerciseParser
+from app.src.exercise_parser import ExerciseParser
 
 events = []
 
