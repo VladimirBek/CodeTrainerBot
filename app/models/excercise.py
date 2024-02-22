@@ -13,6 +13,3 @@ class Exercise(Base, ModelBase):
     count_solved = Column(Integer, server_default="0", nullable=False)
     difficult = Column(Integer, ForeignKey("level.id"), server_default="0", nullable=False)
     task = Column(Text)
-
-
-

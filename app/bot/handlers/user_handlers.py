@@ -1,5 +1,6 @@
 from aiogram import Dispatcher, F, Router
 from aiogram.filters import Command
+from aiogram.filters.command import CommandObject
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 
@@ -10,7 +11,6 @@ from app.cruds.crud_excercise import crud_exercise
 from app.cruds.crud_level import crud_level
 from app.db import LocalSession
 from app.logs import logger
-from aiogram.filters.command import CommandObject
 
 
 class UserHandler:
@@ -56,7 +56,8 @@ class UserHandler:
         await callback.message.answer(text)
         text = "Инструкция по использованию бота\nКоманда для получения заданий: /get_task <сложность> <тема>"
         await callback.message.answer(text)
-        await callback.message.answer(text="Вернуться в главное меню", reply_markup=KeyboardManager().back_to_main_menu())
+        await callback.message.answer(text="Вернуться в главное меню",
+                                      reply_markup=KeyboardManager().back_to_main_menu())
 
     async def get_task(self, message: Message, command: CommandObject, state: FSMContext) -> None:
         if command.args is None:
@@ -91,12 +92,12 @@ class UserHandler:
                 for task in tasks:
                     await message.answer(text=task.name, reply_markup=KeyboardManager.tasks(task))
 
-
     async def choose_task(self, callback: CallbackQuery, state: FSMContext):
         async with LocalSession() as db:
             task = await crud_exercise.get(db, id=int(callback.data))
             await callback.message.edit_text(task.task)
-            await callback.message.answer(text="Вернуться в главное меню", reply_markup=KeyboardManager().back_to_main_menu())
+            await callback.message.answer(text="Вернуться в главное меню",
+                                          reply_markup=KeyboardManager().back_to_main_menu())
 
     async def back_to_main_menu(self, callback: CallbackQuery, state: FSMContext):
         logger.info(f'user {callback.from_user.full_name} with id {callback.from_user.id} back to main menu')

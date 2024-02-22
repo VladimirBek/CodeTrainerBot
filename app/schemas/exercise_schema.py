@@ -21,4 +21,3 @@ class ExerciseSchemaUpdate(BaseModel):
     count_solved: Optional[int] = None
     difficult: Optional[int] = None
     task: Optional[str] = None
-

@@ -5,6 +5,8 @@ from app.models import Level
 from app.schemas import LevelSchemaCreate, LevelSchemaUpdate
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
+
 class CRUDLevel(CRUDBase[Level, LevelSchemaCreate, LevelSchemaUpdate]):
 
     async def get_by_level(self, db: AsyncSession, *, difficult: int) -> Optional[Level]:

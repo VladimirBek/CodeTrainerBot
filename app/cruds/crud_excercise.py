@@ -19,6 +19,7 @@ class CRUDExercise(CRUDBase[Exercise, ExerciseSchemaCreate, ExerciseSchemaUpdate
         q = select(Exercise).filter(Exercise.topic_id == topic_id)
         res = await db.execute(q)
         return res.scalars().all()
+
     async def get_by_difficulty(self, db: AsyncSession, *, difficult: int) -> Optional[Sequence[Exercise]]:
         q = select(Exercise).filter(Exercise.difficult == difficult)
         res = await db.execute(q)
@@ -28,5 +29,6 @@ class CRUDExercise(CRUDBase[Exercise, ExerciseSchemaCreate, ExerciseSchemaUpdate
         q = select(Exercise).filter(Exercise.difficult == difficulty, Exercise.topic_id == topic_id)
         res = await db.execute(q)
         return res.scalars().all()
+
 
 crud_exercise = CRUDExercise(Exercise)
